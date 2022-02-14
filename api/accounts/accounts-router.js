@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const middleware = require("./accounts-middleware");
 
 router.get("/", (req, res, next) => {
   try {
@@ -8,7 +9,7 @@ router.get("/", (req, res, next) => {
   }
 });
 
-router.get("/:id", (req, res, next) => {
+router.get("/:id", middleware.checkAccountId, (req, res, next) => {
   try {
     res.json("get account by id");
   } catch (err) {
@@ -16,23 +17,34 @@ router.get("/:id", (req, res, next) => {
   }
 });
 
-router.post("/", (req, res, next) => {
-  try {
-    res.json("post account");
-  } catch (err) {
-    next(err);
+router.post(
+  "/",
+  middleware.checkAccountPayload,
+  middleware.checkAccountNameUnique,
+  (req, res, next) => {
+    try {
+      res.json("post account");
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-router.put("/:id", (req, res, next) => {
-  try {
-    res.json("update account");
-  } catch (err) {
-    next(err);
+router.put(
+  "/:id",
+  middleware.checkAccountId,
+  middleware.checkAccountPayload,
+  middleware.checkAccountNameUnique,
+  (req, res, next) => {
+    try {
+      res.json("update account");
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", middleware.checkAccountId, (req, res, next) => {
   try {
     res.json("delete account");
   } catch (err) {
