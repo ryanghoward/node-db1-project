@@ -11,8 +11,8 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", middleware.checkAccountId, async (req, res, next) => {
-  req.json(req.account);
+router.get("/:id", middleware.checkAccountId, (req, res, next) => {
+  res.json(req.account);
 });
 
 router.post(
@@ -38,9 +38,8 @@ router.put(
   middleware.checkAccountPayload,
   async (req, res, next) => {
     const updated = await Account.updateById(req.params.id, req.body);
-    res.json(updated);
     try {
-      res.json("update account");
+      res.json(updated);
     } catch (err) {
       next(err);
     }
